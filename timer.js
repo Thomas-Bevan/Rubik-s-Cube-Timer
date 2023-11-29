@@ -1,4 +1,6 @@
 timerRunning = false;
+timeList = []
+timerInput = "timer"
 
 class Timer {
 	constructor() {
@@ -40,10 +42,6 @@ function startTimer() {
 		t1 = new Timer();
 		startTime = t1.startTimer();
 		
-		while (timerRunning == true) {
-			endTime = t1.endTimer();
-			finalTime = t1.calculateTime();
-		t1.changeDisplay(finalTime); }
 		
 		
 	} else {
@@ -51,6 +49,27 @@ function startTimer() {
 		endTime = t1.endTimer();
 		finalTime = t1.calculateTime();
 		t1.changeDisplay(finalTime);
+		timeList.push(finalTime);
 		
+	}
+}
+
+function timerSwitch() {
+	if (timerInput == "timer") {
+		timerInput = "typing";
+		
+		timerDisplay = document.getElementById("timer");
+		timerDisplay.innerHTML = ""
+		
+		buttonText = document.getElementById("SwitchButton")
+		buttonText.innerHTML = "Enter times with timer"
+	} else {
+		timerInput = "timer";
+		
+		timerDisplay = document.getElementById("timer");
+		timerDisplay.innerHTML = "0.00"
+		
+		buttonText = document.getElementById("SwitchButton")
+		buttonText.innerHTML = "Enter times with typing"
 	}
 }
