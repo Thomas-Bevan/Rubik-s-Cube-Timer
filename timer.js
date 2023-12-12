@@ -13,7 +13,6 @@ class Timer {
 	
 	startTimer() {
 		this.startTime = Date.now();
-		console.log(this.startTime);
 		return this.startTime;
 	}
 	
@@ -50,6 +49,7 @@ function startTimer() {
 		finalTime = t1.calculateTime();
 		t1.changeDisplay(finalTime);
 		timeList.push(finalTime);
+		updateTimeList()
 		
 	}
 }
@@ -63,6 +63,9 @@ function timerSwitch() {
 		
 		buttonText = document.getElementById("SwitchButton")
 		buttonText.innerHTML = "Enter times with timer"
+		
+		typingDisplay = document.getElementById("typingInput")
+		typingDisplay.innerHTML = '<form id="timeInputForm"><label for="inputtedTime">Enter time:</label><br><input type="text" id="inputtedTime" name="inputtedTime"></form><div class="wrapper"><button onclick="enterTypingTime()">Submit</button></div>'
 	} else {
 		timerInput = "timer";
 		
@@ -71,5 +74,39 @@ function timerSwitch() {
 		
 		buttonText = document.getElementById("SwitchButton")
 		buttonText.innerHTML = "Enter times with typing"
+		
+		typingDisplay = document.getElementById("typingInput")
+		typingDisplay.innerHTML = ""
 	}
 }
+
+function enterTypingTime() {
+	x = document.getElementById("inputtedTime").value
+	x = parseFloat(x)
+	if (x != NaN) {
+		timeList.push(x)
+		console.log(timeList)
+		document.getElementById("timeInputForm").reset()
+		updateTimeList()
+		
+	}
+}
+
+function updateTimeList() {
+	listOfTimes = document.getElementById("listOfTimes")
+	for (let i = 0; i < timeList.length; i++) {
+		if (i == 10) {
+			break;
+		}
+		listOfTimes.innerHTML += "<li>" + timeList[i] + "</li>"
+	}
+}
+
+document.onkeyup = function(e) {
+	if (e.keyCode == 32) {
+		if (document.activeElement.nodeName.toLowerCase() != "input") {
+			startTimer();
+		}
+	}
+}
+
