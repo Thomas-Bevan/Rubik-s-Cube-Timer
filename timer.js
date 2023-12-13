@@ -35,6 +35,56 @@ class Timer {
 	}
 }
 
+class Scramble {
+	constructor() {
+		this.currentScramble = ""
+		this.previousScramble = ""
+		
+		this.moveSet = ["R","U","F","D","L","B"]
+		this.moveType = ["", "'", "2"]
+		this.randomMove = ""
+		this.scrambleLength = 16
+		this.previousMove = ""
+	}
+	
+	getCurrentScramble() {
+		return this.currentScramble
+	}
+	
+	getPreviousScramble() {
+		return this.previousScramble
+	}
+	
+	generateScrambleLength() {
+		this.scrambleLength = 16 + Math.floor(Math.random() * 8)
+		return this.scrambleLength
+	}
+		
+	generateRandomMove() {
+		this.randomMove = this.moveSet[Math.floor(Math.random()*this.moveSet.length)] + this.moveType[Math.floor(Math.random()*this.moveType.length)]
+		return this.randomMove
+	}
+		
+	generateScramble() {
+		this.previousScramble = this.currentScramble
+		this.currentScramble = ""
+		this.previousMove = ""
+		this.randomMove = ""
+		this.scrambleLength = this.generateScrambleLength()
+		for (let i = 0; i < this.scrambleLength; i++) {
+			while (this.randomMove[0] == this.previousMove[0]) {
+				this.randomMove = this.generateRandomMove()
+				
+			}
+			this.currentScramble += this.randomMove + " "
+			this.previousMove = this.randomMove
+		}
+		
+		return this.currentScramble
+	}
+}
+		
+
 function startTimer() {
 	if (timerRunning == false) {
 		timerRunning = true;
@@ -94,12 +144,45 @@ function enterTypingTime() {
 
 function updateTimeList() {
 	listOfTimes = document.getElementById("listOfTimes")
-	for (let i = 0; i < timeList.length; i++) {
-		if (i == 10) {
+	listOfTimes.innerHTML = ""
+	for (let i = timeList.length - 1; i > -1; i--) {
+		if (i == timeList.length - 20) {
 			break;
 		}
 		listOfTimes.innerHTML += "<li>" + timeList[i] + "</li>"
 	}
+	averageTypes = [5,12,50,100]
+	averageList = document.getElementById("averages")
+	averageList.innerHTML = ""
+	
+	totalMean = 0
+	for (let i = 0; i < timeList.length; i++) {
+		totalMean += timeList[i]
+	}
+	totalMean = totalMean / timeList.length
+	averageList.innerHTML += "mean: = " + Math.round(totalMean*1000)/1000 + "\t"
+	
+	for (let i = 0; i < averageTypes.length; i++) {
+		
+		totalOfTimes = 0
+		if (timeList.length >= averageTypes[i]) {
+			for (let j = timeList.length - 1; j > timeList.length - (averageTypes[i] + 1); j--) {
+				totalOfTimes += timeList[j]
+			}
+			average = totalOfTimes/averageTypes[i]
+			
+			averageList.innerHTML += "ao" + averageTypes[i] + " = " + Math.round(average*1000)/1000 + "\t"
+		}
+	}
+	
+}
+
+function generateNewScramble() {
+	scramble1 = new Scramble()
+	scramble1.generateScramble()
+	console.log(scramble1.getCurrentScramble())
+	scrambleDisplay = document.getElementById("scramble")
+	scrambleDisplay.innerHTML = scramble1.getCurrentScramble()
 }
 
 document.onkeyup = function(e) {
