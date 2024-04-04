@@ -5,3 +5,10 @@
 	position: absolute;
 	top: 50%;
 }
+
+#listContainer {
+    height: 300px;
+	width: 150px;
+    overflow-y: auto; 
+	background-color: lightgray;
+}

@@ -13,18 +13,23 @@ class Timer {
 	
 	startTimer() {
 		this.startTime = Date.now();
+		this.interval = setInterval(() => {
+            const elapsedTime = (Date.now() - this.startTime) / 1000;
+            this.changeDisplay(elapsedTime.toFixed(2));
+        }, 10);
 		return this.startTime;
 	}
 	
 	endTimer() {
 		this.endTime = Date.now();
-		console.log(this.endTime);
+		clearInterval(this.interval);
 		
 		return this.endTime;
 	}
 	
 	calculateTime() {
 		this.finalTime = (this.endTime - this.startTime)/1000;
+		this.changeDisplay(this.finalTime.toFixed(2));
 		return this.finalTime
 	}
 	
@@ -142,15 +147,28 @@ function enterTypingTime() {
 	}
 }
 
+
+
 function updateTimeList() {
-	listOfTimes = document.getElementById("listOfTimes")
-	listOfTimes.innerHTML = ""
-	for (let i = timeList.length - 1; i > -1; i--) {
-		if (i == timeList.length - 20) {
-			break;
-		}
-		listOfTimes.innerHTML += "<li>" + timeList[i] + "</li>"
-	}
+    listOfTimes = document.getElementById("listOfTimes");
+    listOfTimes.innerHTML = ""; 
+
+    for (let i = timeList.length - 1; i >= 0; i--) {
+        solve = document.createElement("li");
+
+        solveTime = document.createElement("span");
+        solveTime.innerText = timeList[i] + " ";
+
+        deleteButton = document.createElement("button");
+        deleteButton.innerText = "X";
+        deleteButton.onclick = function() { deleteSolve(i); };
+
+        solve.appendChild(solveTime);
+        solve.appendChild(deleteButton);
+
+        listOfTimes.appendChild(solve);
+    }
+	
 	averageTypes = [5,12,50,100]
 	averageList = document.getElementById("averages")
 	averageList.innerHTML = ""
@@ -174,8 +192,13 @@ function updateTimeList() {
 			averageList.innerHTML += "ao" + averageTypes[i] + " = " + Math.round(average*1000)/1000 + "\t"
 		}
 	}
-	
 }
+
+function deleteSolve(index) {
+    timeList.splice(index, 1); // Remove the solve at the given index from the timeList array
+    updateTimeList(); // Update the displayed list of times to reflect the deletion
+}
+
 
 function generateNewScramble() {
 	scramble1 = new Scramble()
