@@ -15,7 +15,7 @@ class Timer {
 		this.startTime = Date.now();
 		this.interval = setInterval(() => {
             const elapsedTime = (Date.now() - this.startTime) / 1000;
-            this.changeDisplay(elapsedTime.toFixed(2));
+            this.changeDisplay(elapsedTime.toFixed(3));
         }, 10);
 		return this.startTime;
 	}
@@ -29,7 +29,7 @@ class Timer {
 	
 	calculateTime() {
 		this.finalTime = (this.endTime - this.startTime)/1000;
-		this.changeDisplay(this.finalTime.toFixed(2));
+		this.changeDisplay(this.finalTime.toFixed(3));
 		return this.finalTime
 	}
 	
@@ -103,7 +103,7 @@ function startTimer() {
 		endTime = t1.endTimer();
 		finalTime = t1.calculateTime();
 		t1.changeDisplay(finalTime);
-		timeList.push(finalTime);
+		timeList.push([finalTime, finalTime]);
 		updateTimeList()
 		
 	}
@@ -154,19 +154,38 @@ function updateTimeList() {
     listOfTimes.innerHTML = ""; 
 
     for (let i = timeList.length - 1; i >= 0; i--) {
-        solve = document.createElement("li");
+        solve = document.createElement("li")
+		
+        solveTime = document.createElement("span")
+        solveTime.innerText = timeList[i][0] + " "
+		
+		if (timeList[i][0] == Infinity) {
+			solveTime.innerText = "DNF "
+		}
+		
+        deleteButton = document.createElement("button")
+        deleteButton.innerText = "X"
+        deleteButton.onclick = function() {deleteSolve(i)}
+		
+		penaltyButton = document.createElement("button")
+		penaltyButton.innerText = "+2"
+		penaltyButton.onclick = function() {penaltySolve(i)}
+		
+		DNFButton = document.createElement("button")
+		DNFButton.innerText = "DNF"
+		DNFButton.onclick = function() {DNFSolve(i)}
+		
+		OKButton = document.createElement("button")
+		OKButton.innerText = "OK"
+		OKButton.onclick = function() {OKSolve(i)}
 
-        solveTime = document.createElement("span");
-        solveTime.innerText = timeList[i] + " ";
+        solve.appendChild(solveTime)
+        solve.appendChild(deleteButton)
+		solve.appendChild(penaltyButton)
+		solve.appendChild(DNFButton)
+		solve.appendChild(OKButton)
 
-        deleteButton = document.createElement("button");
-        deleteButton.innerText = "X";
-        deleteButton.onclick = function() { deleteSolve(i); };
-
-        solve.appendChild(solveTime);
-        solve.appendChild(deleteButton);
-
-        listOfTimes.appendChild(solve);
+        listOfTimes.appendChild(solve)
     }
 	
 	averageTypes = [5,12,50,100]
@@ -175,7 +194,9 @@ function updateTimeList() {
 	
 	totalMean = 0
 	for (let i = 0; i < timeList.length; i++) {
-		totalMean += timeList[i]
+		if (timeList[i][0] != Infinity) {
+		totalMean += timeList[i][0]
+		}
 	}
 	totalMean = totalMean / timeList.length
 	averageList.innerHTML += "mean: = " + Math.round(totalMean*1000)/1000 + "\t"
@@ -185,18 +206,38 @@ function updateTimeList() {
 		totalOfTimes = 0
 		if (timeList.length >= averageTypes[i]) {
 			for (let j = timeList.length - 1; j > timeList.length - (averageTypes[i] + 1); j--) {
-				totalOfTimes += timeList[j]
+				totalOfTimes += timeList[j][0]
 			}
-			average = totalOfTimes/averageTypes[i]
 			
-			averageList.innerHTML += "ao" + averageTypes[i] + " = " + Math.round(average*1000)/1000 + "\t"
+			average = Math.round((totalOfTimes/averageTypes[i])*1000)/1000
+			if (average == Infinity) {
+				average = "DNF"
+			}
+			
+			averageList.innerHTML += "ao" + averageTypes[i] + " = " + average + "\t"
 		}
 	}
 }
 
 function deleteSolve(index) {
-    timeList.splice(index, 1); // Remove the solve at the given index from the timeList array
-    updateTimeList(); // Update the displayed list of times to reflect the deletion
+    timeList.splice(index, 1)
+    updateTimeList()
+}
+
+function penaltySolve(index) {
+	newValue = Math.round((timeList[index][1] + 2)*1000)/1000
+	timeList[index].splice(0, 1, newValue)
+	updateTimeList()
+}
+
+function DNFSolve(index) {
+	timeList[index].splice(0, 1, Infinity)
+	updateTimeList()
+}
+
+function OKSolve(index) {
+	timeList[index].splice(0, 1, timeList[index][1])
+	updateTimeList()
 }
 
 
