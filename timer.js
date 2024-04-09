@@ -150,6 +150,8 @@ function enterTypingTime() {
 
 
 function updateTimeList() {
+	console.log("----------------")
+	console.log(timeList)
     listOfTimes = document.getElementById("listOfTimes");
     listOfTimes.innerHTML = ""; 
 
@@ -249,6 +251,78 @@ function generateNewScramble() {
 	scrambleDisplay.innerHTML = scramble1.getCurrentScramble()
 }
 
+function exportSolves() {
+	jsonData = JSON.stringify(timeList, null, 2)
+	download("solves.json", jsonData)
+}
+
+function importSolves() {
+    fileInput = document.getElementById('fileInput')
+    files = fileInput.files
+
+
+    if (files.length <= 0) {
+        alert("Please select a file to import.")
+        return;
+    }
+
+    file = files[0]
+    reader = new FileReader()
+
+    reader.onload = function(e) {
+        contents = e.target.result
+
+        try {
+            importedSolves = JSON.parse(contents)
+            if (Array.isArray(importedSolves)) {
+                timeList = importedSolves.map(item => Array.isArray(item) ? item : [item, item])
+				
+				for (let i = 0; i < timeList.length; i++) {
+					if (timeList[i][0] == null) {
+						timeList[i][0] = Infinity
+					}
+				}
+				
+                updateTimeList()
+                alert("Solves imported successfully.")
+            } else {
+                alert("The file does not contain solves in the expected format.")
+            }
+        } catch (error) {
+            alert("There was an error processing your file.")
+            console.error("Error parsing JSON:", error)
+        }
+    }
+
+    reader.onerror = function(e) {
+        alert("Failed to read the file.")
+        console.error("Error reading file:", e.target.error)
+    }
+
+
+    reader.readAsText(file);
+
+    fileInput.value = '';
+}
+
+
+
+
+function download(filename, text) {
+  element = document.createElement('a')
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  //element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+
+
+
 document.onkeyup = function(e) {
 	if (e.keyCode == 32) {
 		if (document.activeElement.nodeName.toLowerCase() != "input") {
@@ -256,4 +330,9 @@ document.onkeyup = function(e) {
 		}
 	}
 }
+
+
+
+
+
 
