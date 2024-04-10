@@ -17,7 +17,9 @@
 <button onclick="timerSwitch()" id="SwitchButton">Enter times with typing</button> <br>
 <button onclick="generateNewScramble()">Scramble</button><br>
 <button onclick="exportSolves()">Export Solves</button>
-<button onclick="importSolves()">Import Solves</button>
+<button onclick="importSolves()">Import Solves</button><br>
+
+
 <input type="file" id="fileInput" />
 
 <h1> Averages: </h1>
@@ -29,6 +31,47 @@
 <ul id="listOfTimes">
 </ul>
 </div>
+
+<div id="rubiksNet">
+  <!-- Front face -->
+  <div class="face" id="whiteFace">
+    <div class="sticker" id="W00"></div><div class="sticker" id="W01"></div><div class="sticker" id="W02"></div>
+    <div class="sticker" id="W10"></div><div class="sticker" id="W11"></div><div class="sticker" id="W12"></div>
+    <div class="sticker" id="W20"></div><div class="sticker" id="W21"></div><div class="sticker" id="W22"></div>
+  </div>
+  <!-- Back face -->
+  <div class="face" id="greenFace">
+    <div class="sticker" id="G00"></div><div class="sticker" id="G01"></div><div class="sticker" id="G02"></div>
+    <div class="sticker" id="G10"></div><div class="sticker" id="G11"></div><div class="sticker" id="G12"></div>
+    <div class="sticker" id="G20"></div><div class="sticker" id="G21"></div><div class="sticker" id="G22"></div>
+  </div>
+  <!-- Up face -->
+  <div class="face" id="redFace">
+    <div class="sticker" id="R00"></div><div class="sticker" id="R01"></div><div class="sticker" id="R02"></div>
+    <div class="sticker" id="R10"></div><div class="sticker" id="R11"></div><div class="sticker" id="R12"></div>
+    <div class="sticker" id="R20"></div><div class="sticker" id="R21"></div><div class="sticker" id="R22"></div>
+  </div>
+  <!-- Down face -->
+  <div class="face" id="blueFace">
+    <div class="sticker" id="B00"></div><div class="sticker" id="B01"></div><div class="sticker" id="B02"></div>
+    <div class="sticker" id="B10"></div><div class="sticker" id="B11"></div><div class="sticker" id="B12"></div>
+    <div class="sticker" id="B20"></div><div class="sticker" id="B21"></div><div class="sticker" id="B22"></div>
+  </div>
+  <!-- Left face -->
+  <div class="face" id="orangeFace">
+    <div class="sticker" id="O00"></div><div class="sticker" id="O01"></div><div class="sticker" id="O02"></div>
+    <div class="sticker" id="O10"></div><div class="sticker" id="O11"></div><div class="sticker" id="O12"></div>
+    <div class="sticker" id="O20"></div><div class="sticker" id="O21"></div><div class="sticker" id="O22"></div>
+  </div>
+  <!-- Right face -->
+  <div class="face" id="yellowFace">
+    <div class="sticker" id="Y00"></div><div class="sticker" id="Y01"></div><div class="sticker" id="Y02"></div>
+    <div class="sticker" id="Y10"></div><div class="sticker" id="Y11"></div><div class="sticker" id="Y12"></div>
+    <div class="sticker" id="Y20"></div><div class="sticker" id="Y21"></div><div class="sticker" id="Y22"></div>
+  </div>
+</div>
+
+
 
 </body>
 

@@ -12,3 +12,56 @@
     overflow-y: auto; 
 	background-color: lightgray;
 }
+
+
+
+#rubiksNet {
+  width: 300px;
+  height: 300px; 
+  position: relative;
+}
+
+.face {
+  position: absolute;
+  width: 100px; 
+  height: 100px;
+}
+
+#greenFace {
+  top: 100px; 
+  left: 1100px;
+}
+
+#blueFace {
+  top: 100px; 
+  left: 1300px; 
+}
+
+#whiteFace {
+  top: 0; 
+  left: 1100px; 
+}
+
+#yellowFace {
+  top: 200px;
+  left: 1100px; 
+}
+
+#orangeFace {
+  top: 100px; 
+  left: 1000px; 
+}
+
+#redFace {
+  top: 100px;
+  left: 1200px; 
+}
+
+.sticker {
+  width: 30px; 
+  height: 30px; 
+  border: 1px solid black;
+  float: left;
+}
+
+

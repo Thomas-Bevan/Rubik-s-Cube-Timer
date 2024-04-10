@@ -113,7 +113,7 @@ function timerSwitch() {
 	if (timerInput == "timer") {
 		timerInput = "typing";
 		
-		timerDisplay = document.getElementById("timer");
+		timerDisplay = document.getElementById("timer")
 		timerDisplay.innerHTML = ""
 		
 		buttonText = document.getElementById("SwitchButton")
@@ -124,7 +124,7 @@ function timerSwitch() {
 	} else {
 		timerInput = "timer";
 		
-		timerDisplay = document.getElementById("timer");
+		timerDisplay = document.getElementById("timer")
 		timerDisplay.innerHTML = "0.00"
 		
 		buttonText = document.getElementById("SwitchButton")
@@ -246,9 +246,10 @@ function OKSolve(index) {
 function generateNewScramble() {
 	scramble1 = new Scramble()
 	scramble1.generateScramble()
-	console.log(scramble1.getCurrentScramble())
+	drawScramble(scramble1.getCurrentScramble())
 	scrambleDisplay = document.getElementById("scramble")
 	scrambleDisplay.innerHTML = scramble1.getCurrentScramble()
+
 }
 
 function exportSolves() {
@@ -300,9 +301,9 @@ function importSolves() {
     }
 
 
-    reader.readAsText(file);
+    reader.readAsText(file)
 
-    fileInput.value = '';
+    fileInput.value = ''
 }
 
 
@@ -310,15 +311,370 @@ function importSolves() {
 
 function download(filename, text) {
   element = document.createElement('a')
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', filename);
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text))
+  element.setAttribute('download', filename)
 
-  //element.style.display = 'none';
-  document.body.appendChild(element);
 
-  element.click();
+  document.body.appendChild(element)
 
-  document.body.removeChild(element);
+  element.click()
+
+  document.body.removeChild(element)
+}
+
+
+function drawScramble(scramble) {
+	rubiks_cube = get_solved_cube()
+	repeat_move_count = 1
+	
+	for (let i = 0; i < scramble.length; i++) {
+		
+		if (scramble[i] == " ") {
+			continue
+		}
+		
+		if (scramble[i+1] == "2") {
+			repeat_move_count = 2
+			skip = true
+		}
+		if (scramble[i+1] == "'") {
+			repeat_move_count = 3
+			skip = true
+		}
+		
+		if (scramble[i] == "R") {
+			for (let j = 0; j < repeat_move_count; j++) {
+				rubiks_cube = R_move(rubiks_cube)
+			}
+		}
+		if (scramble[i] == "L") {
+			for (let j = 0; j < repeat_move_count; j++) {
+				rubiks_cube = L_move(rubiks_cube)
+			}
+		}
+		if (scramble[i] == "U") {
+			for (let j = 0; j < repeat_move_count; j++) {
+				rubiks_cube = U_move(rubiks_cube)
+			}
+		}
+		if (scramble[i] == "D") {
+			for (let j = 0; j < repeat_move_count; j++) {
+				rubiks_cube = D_move(rubiks_cube)
+			}
+		}
+		if (scramble[i] == "F") {
+			for (let j = 0; j < repeat_move_count; j++) {
+				rubiks_cube = F_move(rubiks_cube)
+			}
+		}
+		if (scramble[i] == "B") {
+			for (let j = 0; j < repeat_move_count; j++) {
+				rubiks_cube = B_move(rubiks_cube)
+			}
+		}
+
+		repeat_move_count = 1
+			
+		}
+	
+
+	
+	updateCube(rubiks_cube)
+}
+
+function get_solved_cube() {
+	whiteFace = [
+	["W","W","W"],
+	["W","W","W"],
+	["W","W","W"]
+	]
+	
+	yellowFace = [
+    ["Y", "Y", "Y"],
+    ["Y", "Y", "Y"],
+    ["Y", "Y", "Y"]
+	]
+
+	redFace = [
+    ["R", "R", "R"],
+    ["R", "R", "R"],
+    ["R", "R", "R"]
+	]
+	
+	orangeFace = [
+    ["O", "O", "O"],
+    ["O", "O", "O"],
+    ["O", "O", "O"]
+	]
+
+	blueFace = [
+    ["B", "B", "B"],
+    ["B", "B", "B"],
+    ["B", "B", "Y"]
+	]
+
+	greenFace = [
+    ["G", "G", "G"],
+    ["G", "G", "G"],
+    ["R", "G", "G"]
+	]
+	
+	rubiks_cube = [whiteFace, greenFace, redFace, blueFace, orangeFace, yellowFace]
+	return rubiks_cube
+}
+
+function rotate_face_clockwise(face) {
+	rotated_face = [
+	[null, null, null],
+	[null, null, null],
+	[null, null, null]
+	]
+	
+
+	//corners
+	rotated_face[0][0] = face[2][0]
+	rotated_face[0][2] = face[0][0]
+	rotated_face[2][0] = face[2][2]
+	rotated_face[2][2] = face[0][2]
+	
+	//edges
+	rotated_face[0][1] = face[1][0]
+	rotated_face[1][0] = face[2][1]
+	rotated_face[1][2] = face[0][1]
+	rotated_face[2][1] = face[1][2]
+	
+	// centre
+	rotated_face[1][1] = face[1][1]
+	return rotated_face
+}
+
+function R_move(rubiks_cube) {
+
+	rubiks_cube[2] = rotate_face_clockwise(rubiks_cube[2])
+	
+	temp_piece_1 = rubiks_cube[3][0][0]
+	temp_piece_2 = rubiks_cube[3][1][0]
+	temp_piece_3 = rubiks_cube[3][2][0]
+	
+	// white to blue
+	rubiks_cube[3][2][0] = rubiks_cube[0][0][2]
+	rubiks_cube[3][1][0] = rubiks_cube[0][1][2]
+	rubiks_cube[3][0][0] = rubiks_cube[0][2][2]
+	
+	// green to white
+	rubiks_cube[0][0][2] = rubiks_cube[1][0][2]
+	rubiks_cube[0][1][2] = rubiks_cube[1][1][2]
+	rubiks_cube[0][2][2] = rubiks_cube[1][2][2]
+	
+	// yellow to green
+	rubiks_cube[1][0][2] = rubiks_cube[5][0][2]
+	rubiks_cube[1][1][2] = rubiks_cube[5][1][2]
+	rubiks_cube[1][2][2] = rubiks_cube[5][2][2]
+	
+	// blue to yellow
+	rubiks_cube[5][2][2] = temp_piece_1
+	rubiks_cube[5][1][2] = temp_piece_2
+	rubiks_cube[5][0][2] = temp_piece_3
+	
+	return rubiks_cube
+}
+
+function U_move(rubiks_cube) {
+
+	rubiks_cube[0] = rotate_face_clockwise(rubiks_cube[0])
+	
+	temp_piece_1 = rubiks_cube[2][0][0]
+	temp_piece_2 = rubiks_cube[2][0][1]
+	temp_piece_3 = rubiks_cube[2][0][2]
+	
+	// blue to red
+	rubiks_cube[2][0][0] = rubiks_cube[3][0][0]
+	rubiks_cube[2][0][1] = rubiks_cube[3][0][1]
+	rubiks_cube[2][0][2] = rubiks_cube[3][0][2]
+	
+	// orange to blue
+	rubiks_cube[3][0][0] = rubiks_cube[4][0][0]
+	rubiks_cube[3][0][1] = rubiks_cube[4][0][1]
+	rubiks_cube[3][0][2] = rubiks_cube[4][0][2]
+	
+	// green to orange
+	rubiks_cube[4][0][0] = rubiks_cube[1][0][0]
+	rubiks_cube[4][0][1] = rubiks_cube[1][0][1]
+	rubiks_cube[4][0][2] = rubiks_cube[1][0][2]
+	
+	// red to green
+	rubiks_cube[1][0][0] = temp_piece_1
+	rubiks_cube[1][0][1] = temp_piece_2
+	rubiks_cube[1][0][2] = temp_piece_3	
+	
+	return rubiks_cube
+}
+
+function L_move(rubiks_cube) {
+
+	rubiks_cube[4] = rotate_face_clockwise(rubiks_cube[4])
+	
+	temp_piece_1 = rubiks_cube[3][0][2]
+	temp_piece_2 = rubiks_cube[3][1][2]
+	temp_piece_3 = rubiks_cube[3][2][2]
+	
+	// yellow to blue
+	rubiks_cube[3][2][2] = rubiks_cube[5][0][0]
+	rubiks_cube[3][1][2] = rubiks_cube[5][1][0]
+	rubiks_cube[3][0][2] = rubiks_cube[5][2][0]
+	
+	// green to yellow
+	rubiks_cube[5][0][0] = rubiks_cube[1][0][0]
+	rubiks_cube[5][1][0] = rubiks_cube[1][1][0]
+	rubiks_cube[5][2][0] = rubiks_cube[1][2][0]
+	
+	// white to green
+	rubiks_cube[1][0][0] = rubiks_cube[0][0][0]
+	rubiks_cube[1][1][0] = rubiks_cube[0][1][0]
+	rubiks_cube[1][2][0] = rubiks_cube[0][2][0]
+		
+	// blue to white
+	rubiks_cube[0][2][0] = temp_piece_1
+	rubiks_cube[0][1][0] = temp_piece_2
+	rubiks_cube[0][0][0] = temp_piece_3	
+	
+	return rubiks_cube
+}
+
+function D_move(rubiks_cube) {
+
+	rubiks_cube[5] = rotate_face_clockwise(rubiks_cube[5])
+	
+	temp_piece_1 = rubiks_cube[2][2][0]
+	temp_piece_2 = rubiks_cube[2][2][1]
+	temp_piece_3 = rubiks_cube[2][2][2]
+	
+	// green to red
+	rubiks_cube[2][2][0] = rubiks_cube[1][2][0]
+	rubiks_cube[2][2][1] = rubiks_cube[1][2][1]
+	rubiks_cube[2][2][2] = rubiks_cube[1][2][2]
+	
+	// orange to green
+	rubiks_cube[1][2][0] = rubiks_cube[4][2][0]
+	rubiks_cube[1][2][1] = rubiks_cube[4][2][1]
+	rubiks_cube[1][2][2] = rubiks_cube[4][2][2]
+	
+	// blue to orange
+	rubiks_cube[4][2][0] = rubiks_cube[3][2][0]
+	rubiks_cube[4][2][1] = rubiks_cube[3][2][1]
+	rubiks_cube[4][2][2] = rubiks_cube[3][2][2]
+	
+	// red to blue
+	rubiks_cube[3][2][0] = temp_piece_1
+	rubiks_cube[3][2][1] = temp_piece_2
+	rubiks_cube[3][2][2] = temp_piece_3	
+	
+	return rubiks_cube
+}
+
+function F_move(rubiks_cube) {
+
+	
+	rubiks_cube[1] = rotate_face_clockwise(rubiks_cube[1])
+	
+	temp_piece_1 = rubiks_cube[0][2][0]
+	temp_piece_2 = rubiks_cube[0][2][1]
+	temp_piece_3 = rubiks_cube[0][2][2]
+	
+	// orange to white
+	rubiks_cube[0][2][0] = rubiks_cube[4][2][2]
+	rubiks_cube[0][2][1] = rubiks_cube[4][1][2]
+	rubiks_cube[0][2][2] = rubiks_cube[4][0][2]
+	
+	// yellow to ornage
+	rubiks_cube[4][0][2] = rubiks_cube[5][0][0]
+	rubiks_cube[4][1][2] = rubiks_cube[5][0][1]
+	rubiks_cube[4][2][2] = rubiks_cube[5][0][2]
+	
+	// red to yellow
+	rubiks_cube[5][0][0] = rubiks_cube[2][2][0]
+	rubiks_cube[5][0][1] = rubiks_cube[2][1][0]
+	rubiks_cube[5][0][2] = rubiks_cube[2][0][0]
+	
+	// white to red
+	rubiks_cube[2][0][0] = temp_piece_1
+	rubiks_cube[2][1][0] = temp_piece_2
+	rubiks_cube[2][2][0] = temp_piece_3	
+	
+	return rubiks_cube
+	
+}
+
+function B_move(rubiks_cube) {
+	
+	rubiks_cube[3] = rotate_face_clockwise(rubiks_cube[3])
+
+	
+	temp_piece_1 = rubiks_cube[0][0][0]
+	temp_piece_2 = rubiks_cube[0][0][1]
+	temp_piece_3 = rubiks_cube[0][0][2]
+	
+	// red to white
+	rubiks_cube[0][0][0] = rubiks_cube[2][0][2]
+	rubiks_cube[0][0][1] = rubiks_cube[2][1][2]
+	rubiks_cube[0][0][2] = rubiks_cube[2][2][2]
+	
+	// yellow to red
+	rubiks_cube[2][0][2] = rubiks_cube[5][2][2]
+	rubiks_cube[2][1][2] = rubiks_cube[5][2][1]
+	rubiks_cube[2][2][2] = rubiks_cube[5][2][0]
+	
+	// orange to yellow
+	rubiks_cube[5][2][0] = rubiks_cube[4][0][0]
+	rubiks_cube[5][2][1] = rubiks_cube[4][1][0]
+	rubiks_cube[5][2][2] = rubiks_cube[4][2][0]
+	
+	// white to orange
+	rubiks_cube[4][2][0] = temp_piece_1
+	rubiks_cube[4][1][0] = temp_piece_2
+	rubiks_cube[4][0][0] = temp_piece_3	
+	
+	return rubiks_cube
+	
+}
+
+function updateCube(cubeState) {
+	const faces = ['whiteFace', 'greenFace', 'redFace', 'blueFace', 'orangeFace', 'yellowFace'];
+  
+
+  
+	for (let i = 0; i < faces.length; i++) {
+		faceElement = document.getElementById(faces[i])
+		faceArray = cubeState[i]
+		
+		stickers = faceArray.flat()
+		faceStickers = faceElement.querySelectorAll('.sticker')
+		
+		for (let j = 0; j < faceStickers.length; j++) {
+			stickerElement = faceStickers[j]
+			stickerElement.style.backgroundColor = getColour(stickers[j])
+		}
+	}
+}
+
+
+function getColour(colour) {
+  switch (colour) {
+    case 'W':
+      return 'white'
+    case 'Y':
+      return 'yellow'
+    case 'R':
+      return 'red'
+    case 'O':
+      return 'orange'
+    case 'B':
+      return 'blue'
+    case 'G':
+      return 'green'
+    default:
+      return 'black';
+  }
 }
 
 
@@ -330,6 +686,8 @@ document.onkeyup = function(e) {
 		}
 	}
 }
+
+generateNewScramble()
 
 
 
