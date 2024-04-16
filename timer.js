@@ -139,7 +139,7 @@ function enterTypingTime() {
 	x = document.getElementById("inputtedTime").value
 	x = parseFloat(x)
 	if (x != NaN) {
-		timeList.push(x)
+		timeList.push([x,x])
 		console.log(timeList)
 		document.getElementById("timeInputForm").reset()
 		updateTimeList()
@@ -678,16 +678,17 @@ function getColour(colour) {
 }
 
 
-
 document.onkeyup = function(e) {
 	if (e.keyCode == 32) {
 		if (document.activeElement.nodeName.toLowerCase() != "input") {
+			if (timerInput == "timer") {
 			startTimer();
+			}
 		}
 	}
 }
 
-generateNewScramble()
+
 
 
 

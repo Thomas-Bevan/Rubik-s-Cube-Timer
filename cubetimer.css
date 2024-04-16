@@ -6,8 +6,13 @@
 	top: 50%;
 }
 
+#timer {
+    font-size: 100px; 
+	
+}
+
 #listContainer {
-    height: 300px;
+    height: 200px;
 	width: 250px;
     overflow-y: auto; 
 	background-color: lightgray;
